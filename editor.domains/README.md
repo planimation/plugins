@@ -2,4 +2,4 @@
 
 This folder contains the plugin js for http://editor.planning.domains, and it also contain the Planimation Unity build file(index.html and build folder).
 
-The plugin is interacting with the Planimation through the iframe.
+The Planimation is delployed on the Heroku(https://planning-visualisation.herokuapp.com/), and the plugin is interacting with the Planimation through the iframe.
