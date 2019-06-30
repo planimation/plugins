@@ -7,7 +7,7 @@ This folder contains the plugin for http://editor.planning.domains.
  - Animate the uploaded PDDL Plan
 
 
-## How to use this plugin 
+## How to use this plugin
 
 1. Go to http://editor.planning.domains
 2. Click plugin on the top menu and add plugin url to upload it
