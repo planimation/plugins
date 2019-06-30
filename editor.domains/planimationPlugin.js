@@ -1,3 +1,39 @@
+var PLANIMATION_HELP_MODEL=`
+<div class="modal fade in" id="planimationhelpModal" tabindex="-1" role="dialog" aria-labelledby="helpModalLabel" aria-hidden="false" style="display: none;">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="helpModalLabel">Planimation Help and Information</h4>
+      </div>
+      <div class="modal-body">
+        <p><strong>Planimation</strong> is an web application that animate the plans given by the <a href="http://en.wikipedia.org/wiki/Planning_Domain_Definition_Language" target="_blank">PDDL</a> planner.
+
+        The functionality is continually changing, but currently it support the following features:</p>
+
+        <ul>
+          <li>Animate the plan return by the solver API: http://solver.planning.domains/solver</li>
+          <li>Animate the uploaded plan</li>
+          <li>Download/upload the animation data</li>
+        </ul>
+		<hr class="style1">
+		<strong>Contribute to Planimation</strong>
+        <p>Planimation intends to help users with better understanding of AI planning and it's open source project, So please contribute! You can find all the source code and documention at [<a href="https://github.com/planimation" target="_blank">here</a>]
+
+        </p>
+        <p>Any feedback, bug reports, comments, questions, or concerns can be sent to <a target="_blank" href="mailto:nir.lipovetzky@unimelb.edu.au">Nir Lipovetzky</a>.
+        </p>
+
+      </div>
+      <div class="modal-footer">
+      	
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+`
 var PLANIMATION_MODEL =`
 <!-- Choose Files Modal -->
 <div class="modal fade" id="chooseFilesPlanimationModel" tabindex="-1" role="dialog" aria-labelledby="chooseFilesModalLabel" aria-hidden="true">
@@ -5,7 +41,9 @@ var PLANIMATION_MODEL =`
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h4 class="modal-title" id="chooseFilesModalLabel">Animate PDDL plan</h4>
+        <h4 class="modal-title" style="display:inline" id="chooseFilesModalLabel">Planimate your plan</h4>
+        <a onclick="$('#planimationhelpModal').modal(true)"><span class="glyphicon glyphicon-question-sign" style="cursor: pointer; top:7px !important; left:7px;font-size:25px;"aria-hidden="true"></span></a>
+    
       </div>
       <div class="modal-body">
         <form class="form-horizontal left" role="form">
@@ -62,8 +100,9 @@ var PLANIMATION_MODEL =`
       </div>
       <br/>
 
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+      <div class="modal-footer"  >
+        <a href="http://planimation.planning.domains/" style="float:left" target="_blank">Try Planimation Web App</a>
+        <button type="button" class="btn btn-default"  data-dismiss="modal">Cancel</button>
       </div>
     </div>
   </div>
@@ -233,6 +272,8 @@ define(function () {
 
             if (!(window.planimationSolverStyled)) {
                 $('body').append(PLANIMATION_MODEL);
+                $('body').append(PLANIMATION_HELP_MODEL);
+                
                 window.planimationSolverStyled = true;
             }
             
