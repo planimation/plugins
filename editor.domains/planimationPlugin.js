@@ -7,9 +7,9 @@ var PLANIMATION_HELP_MODEL=`
         <h4 class="modal-title" id="helpModalLabel">Planimation Help and Information</h4>
       </div>
       <div class="modal-body">
-        <p><strong>Planimation</strong> is an web application that animate the plans given by the <a href="http://en.wikipedia.org/wiki/Planning_Domain_Definition_Language" target="_blank">PDDL</a> planner.
+        <p><strong>Planimation</strong> is a web application that animates plans given by a <a href="http://en.wikipedia.org/wiki/Planning_Domain_Definition_Language" target="_blank">PDDL</a> planner.
 
-        The functionality is continually changing, but currently it support the following features:</p>
+        Currently it supports the following features:</p>
 
         <ul>
           <li>Animate the plan return by the solver API: http://solver.planning.domains/solver</li>
@@ -17,11 +17,14 @@ var PLANIMATION_HELP_MODEL=`
           <li>Download/upload the animation data</li>
         </ul>
 		<hr class="style1">
-		<strong>Contribute to Planimation</strong>
-        <p>Planimation intends to help users with better understanding of AI planning and it's open source project, So please contribute! You can find all the source code and documention at [<a href="https://github.com/planimation" target="_blank">here</a>]
+    <strong>Contribute to Planimation</strong>
+        <p>Planimation is a modular and extensible open source framework to visualise sequential solutions of planning problems specified in PDDL. It introduces a preliminary declarative PDDL-like animation profile specification, expressive
+enough to synthesise animations of arbitrary initial states and goals of a benchmark with just a single profile. </p>
+        
+      <p>Planimation intends to help users to better understand AI planning, and its solutions. It's an open source project, So please contribute! You can find all the source code and documention at [<a href="https://github.com/planimation" target="_blank">here</a>]
 
         </p>
-        <p>Any feedback, bug reports, comments, questions, or concerns can be sent to <a target="_blank" href="mailto:nir.lipovetzky@unimelb.edu.au">Nir Lipovetzky</a>.
+        <p>Any feedback, bug reports, comments, questions, or concerns can be sent to <a target="_blank" href="mailto:nir.lipovetzky@unimelb.edu.au">Nir Lipovetzky</a>, or through one of the issues tracker in the code repos at [<a href="https://github.com/planimation" target="_blank">github.com/planimation</a>].
         </p>
 
       </div>
