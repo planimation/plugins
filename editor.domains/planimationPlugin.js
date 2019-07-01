@@ -297,12 +297,12 @@ define(function () {
 
         save: function() {
             // Used to save the plugin settings for later
-            return {url: window.planimationURL};
+            return {planimationURL: window.planimationURL};
         },
 
         load: function(settings) {
             // Restore the plugin settings from a previous save call
-            window.planimationURL = "http://solver.planning.domains/solve";
+            window.planimationURL = settings['planimationURL'];
         }
 
     };
