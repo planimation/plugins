@@ -1,3 +1,3 @@
 # plugins
 
-This repository contains the plugins to invoke the planimation.
+This repository contains the plugins to invoke planimation.
