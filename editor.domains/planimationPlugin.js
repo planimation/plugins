@@ -3,20 +3,20 @@ var PLANIMATION_HELP_MODEL=`
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">Ã—</span><span class="sr-only">Close</span></button>
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
         <h4 class="modal-title" id="helpModalLabel">Planimation Help and Information</h4>
       </div>
       <div class="modal-body">
-        <p><strong>Planimation</strong> is a web application that animates plans given by a <a href="http://en.wikipedia.org/wiki/Planning_Domain_Definition_Language" target="_blank">PDDL</a> planner.
+        <p><strong>Planimation</strong> is a web application that animates plans (solutions) of problems specified in <a href="http://en.wikipedia.org/wiki/Planning_Domain_Definition_Language" target="_blank">PDDL</a>.
 
         Currently it supports the following features:</p>
 
         <ul>
-          <li>Animate the plan return by the solver API: http://solver.planning.domains/solver</li>
-          <li>Animate the uploaded plan</li>
-          <li>Download/upload the animation data</li>
+          <li>Animate the plan returned by a planner deployed through the solver API: http://solver.planning.domains/solver</li>
+          <li>Animate a text based uploaded plan compliant with the International Planning Competitions output: One grounded action per line </li>
+          <li>Upload a saved animation file from planimation</li>
         </ul>
-        <p>Click [<a href="https://github.com/planimation/documentation/tree/master/Demo%20Files" target="_blank">here</a>] to download the Demo files.</p>
+        <p>Click [<a href="https://github.com/planimation/documentation/tree/master/Demo%20Files" target="_blank">here</a>] to download animation profiles for few domains, or [<a href="tinyurl.com/yxlt96fp" target="_blank">here</a>] to open a session with a Blocksworld example ready to planimate.</p>
 		<hr class="style1">
     <strong>Contribute to Planimation</strong>
         <p>Planimation is a modular and extensible open source framework to visualise sequential solutions of planning problems specified in PDDL. It introduces a preliminary declarative PDDL-like animation profile specification, expressive
@@ -165,7 +165,7 @@ function showPlanimation() {
 		html +='<script type="text/javascript">';
 		html +=' </script> </head> <body> <iframe scrolling="no" style="overflow:hidden" id=';
 		html +='"'+iframe_id+'"'
-		html +=' src="https://planning-visualisation.herokuapp.com/index.html"></iframe> </body></html>';		
+		html +=' src="https://planimation.planning.domains/"></iframe> </body></html>';		
         $('#' + editor_name).html(html);
         window.toastr.success('Planimation Window Created!');
         window.toastr.success('First time loading unity (wait 10s)');
