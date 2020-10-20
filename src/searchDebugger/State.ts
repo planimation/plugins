@@ -16,15 +16,17 @@ export class State {
     public wasVisitedOrIsWorse: boolean | undefined;
     public isPlan = false;
     private _isEvaluated = false;
+    // public stateInfo: string | undefined;
 
     constructor(public readonly id: number, public readonly origId: string, public readonly g: number,
         public readonly earliestTime: number, public readonly planHead: SearchHappening[],
-        public readonly parentId?: number, public readonly actionName?: string) {
+        public readonly stateInfo: string,
+        public readonly parentId?: number, public readonly actionName?: string,) {
 
     }
 
     static createInitial(): State {
-        return new State(0, "0", 0, 0, []);
+        return new State(0, "0", 0, 0, [], "");
     }
 
     get isEvaluated(): boolean {
@@ -41,6 +43,11 @@ export class State {
 
         return this;
     }
+
+    // setStateInfo(stateInfo: string): State {
+    //     this.stateInfo = stateInfo;
+    //     return this;
+    // }
 
     setDeadEnd(): State {
         this.h = Number.POSITIVE_INFINITY;

@@ -195,7 +195,10 @@ function endBatch() {
  * @param {number} stateId state id
  */
 function onStateSelected(stateId) {
-    if (selectedStateId === stateId) { return; }
+    if (selectedStateId === stateId) { 
+        window.document.getElementById("planimation").innerHTML = "";
+        return; 
+    }
 
     selectedStateId = stateId;
     selectChartRow(stateId);
@@ -205,6 +208,7 @@ function onStateSelected(stateId) {
     if (!vscode) {
         showStatePlan('<div style="width: 400px; height: 900px; background-color: green"></div>');
     }
+    window.document.getElementById("planimation").innerHTML = "<p>" + states[selectedStateId].stateInfo + "</p>";
 }
 
 document.body.onload = () => initialize();

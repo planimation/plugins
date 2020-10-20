@@ -121,48 +121,82 @@ export class MockSearch {
     private state0_0_1: MockStateContext | undefined;
     private state0_1_0: MockStateContext | undefined;
     private state0_1_1: MockStateContext | undefined;
+    private state0_0_0_0: MockStateContext | undefined;
+
     private state0_1_0_0: MockStateContext | undefined;
     private state0_1_0_0_0: MockStateContext | undefined;
 
     private readonly events = [
-        new MockStateContextEvent("post-initial", this.state0 = MockStateContext.createInitial()),
-        new MockStateSearchContextEvent("patch", this.state0.evaluate(5,
-            [MockHelpfulAction.start("drive"), MockHelpfulAction.start("load")],
-            state => state.buildRelaxedPlan().start("drive").start("load").end(1, "load").end(3, "drive"))),
-        new MockStateContextEvent("post", this.state0_0 = this.state0.applyStart("drive", 0)),
-        new MockStateContextEvent("post", this.state0_1 = this.state0.applyStart("load", 0)),
-        new MockStateSearchContextEvent("patch", this.state0_0.evaluate(5,
-            [MockHelpfulAction.start("load"), MockHelpfulAction.end("drive")],
-            state => state.buildRelaxedPlan().end(4, "drive").start("load").end(1, "load"))),
-        new MockStateSearchContextEvent("patch", this.state0_1.evaluate(4,
-            [MockHelpfulAction.start("drive"), MockHelpfulAction.end("load")],
-            state => state.buildRelaxedPlan().end(1, "load").start("drive").end(4, "drive"))),
+        new MockStateContextEvent("post-initial", this.state0 = MockStateContext.createInitial("at loc1_1\nvisited loc1_1")),
+        new MockStateSearchContextEvent("patch", this.state0.evaluate(4,
+            [MockHelpfulAction.start("move loc1_1 loc1_2"), MockHelpfulAction.start("move loc1_1 loc2_1")],
+            state => state.buildRelaxedPlan().start("move loc1_1 loc1_2").start("move loc1_1 loc2_1").end(1, "move loc1_1 loc1_2").end(1, "move loc1_1 loc2_1"))),
+        new MockStateContextEvent("post", this.state0_0 = this.state0.applyStart("move loc1_1 loc1_2", 0, "at loc1_2\nvisited loc1_1\nvisited loc1_2")),
+        new MockStateContextEvent("post", this.state0_1 = this.state0.applyStart("move loc1_1 loc2_1", 0, "at loc2_2\nvisited loc1_1\nvisited loc2_1")),
 
-        new MockStateContextEvent("post", this.state0_0_0 = this.state0_0.applyEnd("drive", 0, 3)),
-        new MockStateContextEvent("post", this.state0_0_1 = this.state0_0.applyStart("load", 0)),
-        new MockStateSearchContextEvent("patch", this.state0_0_0.evaluate(4,
-            [MockHelpfulAction.start("load")],
-            state => state.buildRelaxedPlan().start("load").end(1, "load"))),
-        new MockStateSearchContextEvent("patch", this.state0_0_1.evaluate(3,
-            [MockHelpfulAction.end("load"), MockHelpfulAction.end("drive")],
-            state => state.buildRelaxedPlan().end(4, "drive").end(1, "load"))),
+        new MockStateSearchContextEvent("patch", this.state0_0.evaluate(3,
+            [MockHelpfulAction.start("move loc1_2 loc2_2"), MockHelpfulAction.end("move loc1_2 loc1_1")],
+            state => state.buildRelaxedPlan().start("move loc1_2 loc2_2").start("move loc1_2 loc1_1").end(1, "move loc1_2 loc2_2").end(1, "move loc1_2 loc1_1"))),
+        new MockStateSearchContextEvent("patch", this.state0_1.evaluate(3,
+            [MockHelpfulAction.start("move loc2_1 loc2_2"), MockHelpfulAction.end("move loc2_1 loc1_1")],
+            state => state.buildRelaxedPlan().start("move loc2_1 loc2_2").start("move loc2_1 loc1_1").end(1, "move loc2_1 loc2_2").end(1, "move loc2_1 loc1_1"))),
+        new MockStateContextEvent("post", this.state0_0_0 = this.state0_0.applyStart("move loc1_2 loc2_2", 0, "at loc2_2\nvisited1_1\nvisited loc1_2\nvisited loc2_2")),
+        new MockStateContextEvent("post", this.state0_0_1 = this.state0_0.applyStart("move loc1_2 loc1_1", 0, "at loc1_1\nvisited loc1_1\nvisited loc1_2")),
+        new MockStateContextEvent("post", this.state0_1_0 = this.state0_1.applyStart("move loc2_1 loc2_2", 0, "at loc2_2\nvisited loc1_1\nvisited loc2_1\nvisited loc2_2")),
+        new MockStateContextEvent("post", this.state0_1_1 = this.state0_1.applyStart("move loc2_1 loc1_1", 0, "at loc1_1\nvisited loc1_1\nvisited loc2_1\n")),
 
-        new MockStateContextEvent("post", this.state0_1_0 = this.state0_1.applyEnd("load", 0, .5)),
-        new MockStateContextEvent("post", this.state0_1_1 = this.state0_1.applyStart("drive", 0)),
-        new MockStateSearchContextEvent("patch", this.state0_1_0.evaluate(2,
-            [MockHelpfulAction.start("drive")],
-            state => state.buildRelaxedPlan().start("drive").end(4, "drive"))),
-        new MockStateSearchContextEvent("patch", this.state0_1_1.evaluate(3,
-            [MockHelpfulAction.end("drive"), MockHelpfulAction.end("load")],
-            state => state.buildRelaxedPlan().end(4, "drive").end(1, "load"))),
+        new MockStateSearchContextEvent("patch", this.state0_0_0.evaluate(1,
+            [MockHelpfulAction.start("move loc2_2 loc2_1")],
+            state => state.buildRelaxedPlan().start("move loc2_2 loc2_1").end(1, "move loc2_2 loc2_1"))),
+        new MockStateSearchContextEvent("patch", this.state0_0_1.evaluate(2,
+            [], state => state.buildRelaxedPlan())),
+        new MockStateSearchContextEvent("patch", this.state0_1_0.evaluate(1,
+            [MockHelpfulAction.start("move loc2_2 loc1_2")],
+            state => state.buildRelaxedPlan().start("move loc2_2 loc1_2").end(1, "move loc2_2 loc1_2"))),
+        new MockStateSearchContextEvent("patch", this.state0_1_1.evaluate(2,
+            [], state => state.buildRelaxedPlan())),
 
-        new MockStateContextEvent("post", this.state0_1_0_0 = this.state0_1_0.applyStart("drive", 0)),
-        new MockStateSearchContextEvent("patch", this.state0_1_0_0.evaluate(1,
-            [MockHelpfulAction.end("drive")],
-            state => state.buildRelaxedPlan().end(4, "drive"))),
+        new MockStateContextEvent("post", this.state0_0_0_0 = this.state0_0_0.applyStart("move loc2_2 loc2_1", 0, "at loc2_1\nvisited loc1_1\nvisited loc1_2\nvisited loc2_2\nvisited loc2_1")),
+        new MockStateSearchContextEvent("patch", this.state0_0_0_0.evaluate(0,
+            [], state => state.buildRelaxedPlan())),
+        // new MockStateContextEvent("post-initial", this.state0 = MockStateContext.createInitial()),
+        // new MockStateSearchContextEvent("patch", this.state0.evaluate(5,
+        //     [MockHelpfulAction.start("drive"), MockHelpfulAction.start("load")],
+        //     state => state.buildRelaxedPlan().start("drive").start("load").end(1, "load").end(3, "drive"))),
+        // new MockStateContextEvent("post", this.state0_0 = this.state0.applyStart("drive", 0)),
+        // new MockStateContextEvent("post", this.state0_1 = this.state0.applyStart("load", 0)),
+        // new MockStateSearchContextEvent("patch", this.state0_0.evaluate(5,
+        //     [MockHelpfulAction.start("load"), MockHelpfulAction.end("drive")],
+        //     state => state.buildRelaxedPlan().end(4, "drive").start("load").end(1, "load"))),
+        // new MockStateSearchContextEvent("patch", this.state0_1.evaluate(4,
+        //     [MockHelpfulAction.start("drive"), MockHelpfulAction.end("load")],
+        //     state => state.buildRelaxedPlan().end(1, "load").start("drive").end(4, "drive"))),
 
-        new MockStateContextEvent("post", this.state0_1_0_0_0 = this.state0_1_0_0.applyEnd("drive", 0, 4)),
-        new MockStateSearchContextEvent("patch", this.state0_1_0_0_0.evaluate(0, [], state => state.buildRelaxedPlan())),
+        // new MockStateContextEvent("post", this.state0_0_0 = this.state0_0.applyEnd("drive", 0, 3)),
+        // new MockStateContextEvent("post", this.state0_0_1 = this.state0_0.applyStart("load", 0)),
+        // new MockStateSearchContextEvent("patch", this.state0_0_0.evaluate(4,
+        //     [MockHelpfulAction.start("load")],
+        //     state => state.buildRelaxedPlan().start("load").end(1, "load"))),
+        // new MockStateSearchContextEvent("patch", this.state0_0_1.evaluate(3,
+        //     [MockHelpfulAction.end("load"), MockHelpfulAction.end("drive")],
+        //     state => state.buildRelaxedPlan().end(4, "drive").end(1, "load"))),
+
+        // new MockStateContextEvent("post", this.state0_1_0 = this.state0_1.applyEnd("load", 0, .5)),
+        // new MockStateContextEvent("post", this.state0_1_1 = this.state0_1.applyStart("drive", 0)),
+        // new MockStateSearchContextEvent("patch", this.state0_1_0.evaluate(2,
+        //     [MockHelpfulAction.start("drive")],
+        //     state => state.buildRelaxedPlan().start("drive").end(4, "drive"))),
+        // new MockStateSearchContextEvent("patch", this.state0_1_1.evaluate(3,
+        //     [MockHelpfulAction.end("drive"), MockHelpfulAction.end("load")],
+        //     state => state.buildRelaxedPlan().end(4, "drive").end(1, "load"))),
+
+        // new MockStateContextEvent("post", this.state0_1_0_0 = this.state0_1_0.applyStart("drive", 0)),
+        // new MockStateSearchContextEvent("patch", this.state0_1_0_0.evaluate(1,
+        //     [MockHelpfulAction.end("drive")],
+        //     state => state.buildRelaxedPlan().end(4, "drive"))),
+
+        // new MockStateContextEvent("post", this.state0_1_0_0_0 = this.state0_1_0_0.applyEnd("drive", 0, 4)),
+        // new MockStateSearchContextEvent("patch", this.state0_1_0_0_0.evaluate(0, [], state => state.buildRelaxedPlan())),
     ];
 }
 
@@ -188,7 +222,8 @@ class MockStateContextEvent extends MockEvent {
             g: this.stateContext.g,
             earliestTime: this.stateContext.earliestTime,
             appliedAction: this.stateContext.appliedAction ? toWireSearchHappening(this.stateContext.appliedAction) : null,
-            planHead: this.stateContext.planHead.map(h => toWireSearchHappening(h))
+            planHead: this.stateContext.planHead.map(h => toWireSearchHappening(h)),
+            stateInfo: this.stateContext.stateInfo
         };
     }
 }
@@ -238,13 +273,13 @@ class MockStateSearchContext {
 
 class MockStateContext {
 
-    static createInitial(): MockStateContext {
-        return new MockStateContext(MockState.createInitial(), 0, EPSILON, undefined, [], undefined);
+    static createInitial(stateInfo: string): MockStateContext {
+        return new MockStateContext(MockState.createInitial(), 0, EPSILON, undefined, [], stateInfo, undefined);
     }
 
     constructor(public readonly state: MockState, public readonly g: number, public readonly earliestTime: number,
         public readonly appliedAction: MockSearchHappening | undefined,
-        public readonly planHead: SearchHappening[], public readonly parentId?: string) {
+        public readonly planHead: SearchHappening[], public readonly stateInfo: string, public readonly parentId?: string) {
     }
 
     get actionName(): string | undefined{
@@ -262,20 +297,20 @@ class MockStateContext {
         return this.planHead[this.planHead.length - 1];
     }
 
-    applyStart(actionName: string, shotCounter: number): MockStateContext {
-        return this.apply(actionName, shotCounter, HappeningType.START, EPSILON);
+    applyStart(actionName: string, shotCounter: number, stateInfo: string): MockStateContext {
+        return this.apply(actionName, shotCounter, HappeningType.START, EPSILON, stateInfo);
     }
 
-    applyEnd(actionName: string, shotCounter: number, duration: number): MockStateContext {
-        return this.apply(actionName, shotCounter, HappeningType.END, duration);
+    applyEnd(actionName: string, shotCounter: number, duration: number, stateInfo: string): MockStateContext {
+        return this.apply(actionName, shotCounter, HappeningType.END, duration, stateInfo);
     }
 
-    apply(actionName: string, shotCounter: number, kind: HappeningType, timeIncrement: number): MockStateContext {
+    apply(actionName: string, shotCounter: number, kind: HappeningType, timeIncrement: number, stateInfo: string): MockStateContext {
         const id = ++MockState.lastStateId;
         const earliestTime = this.earliestTime + timeIncrement;
         const appliedAction = new MockSearchHappening(earliestTime, actionName, shotCounter, 1, kind, false);
         const newPlanHead = this.planHead.concat([appliedAction]);
-        return new MockStateContext(new MockState(id.toString()), this.g + 1, earliestTime, appliedAction, newPlanHead, this.state.id);
+        return new MockStateContext(new MockState(id.toString()), this.g + 1, earliestTime, appliedAction, newPlanHead, stateInfo, this.state.id);
     }
 
     evaluate(h: number, helpfulActions: HelpfulAction[], relaxedPlanFactory: (stateContext: MockStateContext) => RelaxedPlanBuilder): MockStateSearchContext {

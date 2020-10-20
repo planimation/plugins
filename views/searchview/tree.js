@@ -253,6 +253,8 @@ function toNodeTitle(newState) {
         title += '\nHelpful actions: ' + newState.helpfulActions.length;
     }
 
+    title += '\nState Information: \n' + newState.stateInfo;
+
     title = title.split('\n').join('<br/>');
     return title;
 }
