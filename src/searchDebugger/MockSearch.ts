@@ -127,23 +127,23 @@ export class MockSearch {
     private state0_1_0_0_0: MockStateContext | undefined;
 
     private readonly events = [
-        new MockStateContextEvent("post-initial", this.state0 = MockStateContext.createInitial("at loc1_1\nvisited loc1_1")),
-        new MockStateSearchContextEvent("patch", this.state0.evaluate(4,
+        new MockStateContextEvent("post-initial", this.state0 = MockStateContext.createInitial("(at loc1_1)\n(visited loc1_1)")),
+        new MockStateSearchContextEvent("patch", this.state0.evaluate(9,
             [MockHelpfulAction.start("move loc1_1 loc1_2"), MockHelpfulAction.start("move loc1_1 loc2_1")],
             state => state.buildRelaxedPlan().start("move loc1_1 loc1_2").start("move loc1_1 loc2_1").end(1, "move loc1_1 loc1_2").end(1, "move loc1_1 loc2_1"))),
-        new MockStateContextEvent("post", this.state0_0 = this.state0.applyStart("move loc1_1 loc1_2", 0, "at loc1_2\nvisited loc1_1\nvisited loc1_2")),
-        new MockStateContextEvent("post", this.state0_1 = this.state0.applyStart("move loc1_1 loc2_1", 0, "at loc2_2\nvisited loc1_1\nvisited loc2_1")),
+        new MockStateContextEvent("post", this.state0_0 = this.state0.applyStart("move loc1_1 loc1_2", 0, "(at loc1_2)\n(visited loc1_1)\n(visited loc1_2)")),
+        new MockStateContextEvent("post", this.state0_1 = this.state0.applyStart("move loc1_1 loc2_1", 0, "(at loc2_1)\n(visited loc1_1)\n(visited loc2_1)")),
 
-        new MockStateSearchContextEvent("patch", this.state0_0.evaluate(3,
+        new MockStateSearchContextEvent("patch", this.state0_0.evaluate(6,
             [MockHelpfulAction.start("move loc1_2 loc2_2"), MockHelpfulAction.end("move loc1_2 loc1_1")],
             state => state.buildRelaxedPlan().start("move loc1_2 loc2_2").start("move loc1_2 loc1_1").end(1, "move loc1_2 loc2_2").end(1, "move loc1_2 loc1_1"))),
-        new MockStateSearchContextEvent("patch", this.state0_1.evaluate(3,
+        new MockStateSearchContextEvent("patch", this.state0_1.evaluate(5,
             [MockHelpfulAction.start("move loc2_1 loc2_2"), MockHelpfulAction.end("move loc2_1 loc1_1")],
             state => state.buildRelaxedPlan().start("move loc2_1 loc2_2").start("move loc2_1 loc1_1").end(1, "move loc2_1 loc2_2").end(1, "move loc2_1 loc1_1"))),
-        new MockStateContextEvent("post", this.state0_0_0 = this.state0_0.applyStart("move loc1_2 loc2_2", 0, "at loc2_2\nvisited1_1\nvisited loc1_2\nvisited loc2_2")),
-        new MockStateContextEvent("post", this.state0_0_1 = this.state0_0.applyStart("move loc1_2 loc1_1", 0, "at loc1_1\nvisited loc1_1\nvisited loc1_2")),
-        new MockStateContextEvent("post", this.state0_1_0 = this.state0_1.applyStart("move loc2_1 loc2_2", 0, "at loc2_2\nvisited loc1_1\nvisited loc2_1\nvisited loc2_2")),
-        new MockStateContextEvent("post", this.state0_1_1 = this.state0_1.applyStart("move loc2_1 loc1_1", 0, "at loc1_1\nvisited loc1_1\nvisited loc2_1\n")),
+        new MockStateContextEvent("post", this.state0_0_0 = this.state0_0.applyStart("move loc1_2 loc2_2", 0, "(at loc2_2)\n(visited1_1)\n(visited loc1_2)\n(visited loc2_2)")),
+        new MockStateContextEvent("post", this.state0_0_1 = this.state0_0.applyStart("move loc1_2 loc1_1", 0, "(at loc1_1)\n(visited loc1_1)\n(visited loc1_2)")),
+        new MockStateContextEvent("post", this.state0_1_0 = this.state0_1.applyStart("move loc2_1 loc2_2", 0, "(at loc2_2)\n(visited loc1_1)\n(visited loc2_1)\n(visited loc2_2)")),
+        new MockStateContextEvent("post", this.state0_1_1 = this.state0_1.applyStart("move loc2_1 loc1_1", 0, "(at loc1_1)\n(visited loc1_1)\n(visited loc2_1)\n")),
 
         new MockStateSearchContextEvent("patch", this.state0_0_0.evaluate(1,
             [MockHelpfulAction.start("move loc2_2 loc2_1")],
@@ -156,7 +156,7 @@ export class MockSearch {
         new MockStateSearchContextEvent("patch", this.state0_1_1.evaluate(2,
             [], state => state.buildRelaxedPlan())),
 
-        new MockStateContextEvent("post", this.state0_0_0_0 = this.state0_0_0.applyStart("move loc2_2 loc2_1", 0, "at loc2_1\nvisited loc1_1\nvisited loc1_2\nvisited loc2_2\nvisited loc2_1")),
+        new MockStateContextEvent("post", this.state0_0_0_0 = this.state0_0_0.applyStart("move loc2_2 loc2_1", 0, "(at loc2_1)\n(visited loc1_1)\n(visited loc1_2)\n(visited loc2_2)\n(visited loc2_1)")),
         new MockStateSearchContextEvent("patch", this.state0_0_0_0.evaluate(0,
             [], state => state.buildRelaxedPlan())),
         // new MockStateContextEvent("post-initial", this.state0 = MockStateContext.createInitial()),

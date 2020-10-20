@@ -203,7 +203,7 @@ function onStateSelected(stateId) {
     selectedStateId = stateId;
     selectChartRow(stateId);
     selectTreeNode(stateId);
-    postMessage({ command: 'stateSelected', stateId: stateId });
+    postMessage({ command: 'stateSelected', stateId: stateId, stateInfo: states[selectedStateId].stateInfo });
 
     if (!vscode) {
         showStatePlan('<div style="width: 400px; height: 900px; background-color: green"></div>');
