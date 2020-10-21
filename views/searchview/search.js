@@ -27,6 +27,14 @@ window.addEventListener('message', event => {
         case 'stateLog':
             showStateLogButton(message.state);
             break;
+        case 'getPNGOfNode':
+            //getPNGOfNode(message.state);
+            // var i = document.createElement("img");
+            document.getElementById("api-image").setAttribute('src', message.state);
+            //postMessage({comamnd: png});
+            //document.getElementById("planimation").innerHTML = i;
+            postMessage({command: message.state});
+            break;
         default:
             console.log("Unexpected message: " + message.command);
     }
@@ -79,6 +87,8 @@ const mockStates = [
 const states = {};
 /** @type {number | null} */
 let selectedStateId = null;
+
+const domain = '', problem = '', ap = '';
 
 document.getElementById("addMock").onclick = () => {
     if (mockStates.length === 0) { return; }
@@ -196,7 +206,6 @@ function endBatch() {
  */
 function onStateSelected(stateId) {
     if (selectedStateId === stateId) { 
-        window.document.getElementById("planimation").innerHTML = "";
         return; 
     }
 
@@ -208,7 +217,8 @@ function onStateSelected(stateId) {
     if (!vscode) {
         showStatePlan('<div style="width: 400px; height: 900px; background-color: green"></div>');
     }
-    window.document.getElementById("planimation").innerHTML = "<p>" + states[selectedStateId].stateInfo + "</p>";
+    window.document.getElementById("api-des").innerHTML = states[selectedStateId].stateInfo;
+    //getPNGOfNode(domain, problem, ap);
 }
 
 document.body.onload = () => initialize();
@@ -430,4 +440,37 @@ function showStateLogButton(logFilePath) {
         button.style = "color: red";
         button.title = "State log file synchronization disabled. Click here to re-enable.";
     }
+}
+
+function setFile(newDomain, newProblem, newAnimation){
+    domain = newDomain;
+    problem = newProblem;
+    ap = newAnimation;
+}
+
+function getPNGOfNode(state) {
+//   var fd = new FormData();
+//   fd.append("domain", domain);
+//   fd.append("problem", problem);
+//   fd.append("animation", animation);
+//   fd.append("fileType", "spng");
+//   var xhr = new XMLHttpRequest();
+//   xhr.responseType = "arraybuffer";
+//   xhr.open("POST","http://127.0.0.1:8000/upload/(?P<filename>[^/]+)$");
+//   xhr.onreadystatechange = function(){
+//       if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200){
+//           var i = document.createElement("img");
+//           i.setAttribute('src', 'data:image/png;base64,' + btoa(String.fromCharCode.apply(null, new Uint8Array(xhr.response))));
+//           document.getElementById("planimation").innerHTML = i;
+//       } else {
+//           postMessage({command: xhr.status + " " + xhr.readyState});
+//       }
+//   }
+//   xhr.send(fd);
+
+  var i = document.createElement("img");
+  i.setAttribute('src', state);
+  //postMessage({comamnd: png});
+  document.getElementById("planimation").innerHTML = i;
+
 }

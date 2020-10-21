@@ -17,6 +17,10 @@ import { StateResolver } from './StateResolver';
 import { ProblemInfo } from 'pddl-workspace';
 import { DomainInfo } from 'pddl-workspace';
 
+import FormData = require('form-data');
+import fetch, {RequestInit} from "node-fetch";
+import btoa = require('btoa');
+
 export class SearchDebuggerView {
     private webViewPanel: WebviewPanel | undefined;
     private subscriptions: Disposable[] = [];
@@ -188,54 +192,54 @@ export class SearchDebuggerView {
     }
 
     sendRequestToPlanimationApi(subGoal: string): void{
-        const re = /(.*\(:goal\s*\(and\s*)((.|\n)*)(.*\)\s*\))/;
+        const re = /(.*\(:goal\s*\(and\s*)((.|\n)*)(.*\)\s*\)\s*\))/;
         console.log(subGoal);
-        const domain = '(define (domain grid-visit-all)\
-        (:requirements :typing)\
-        (:types        place - object)\
-        (:predicates (connected ?x ?y - place)\
-                 (at-robot ?x - place)\
-                 (visited ?x - place)\
-        )\
-            \
-        (:action move\
-        :parameters (?curpos ?nextpos - place)\
-        :precondition (and (at-robot ?curpos) (connected ?curpos ?nextpos))\
-        :effect (and (at-robot ?nextpos) (not (at-robot ?curpos)) (visited ?nextpos))\
-        )\
-        \
-        )';
-        const problem = '(define (problem grid-12)\
-        (:domain grid-visit-all)\
-        (:objects \
-        \
-        loc1_1 loc1_2 loc2_1 loc2_2 - place \
-        \
-                \
-        )\
-        (:init\
-            (at-robot loc2_2)\
-            (visited loc2_2)\
-            \
-        (connected loc1_1 loc2_1)\
-        (connected loc2_1 loc1_1)\
-        (connected loc1_2 loc1_1)\
-        (connected loc1_2 loc2_2)\
-        (connected loc2_2 loc1_2)\
-        (connected loc1_1 loc1_2)\
-        (connected loc2_1 loc2_2)\
-        (connected loc2_2 loc2_1)\
-         \
-        )\
-        (:goal\
-        (and \
-            (visited loc1_1)\
-            (visited loc1_2)\
-            (visited loc2_1)\
-            (visited loc2_2)\
-        )\
-        )\
-        )';
+        const domain = `(define (domain grid-visit-all)
+        (:requirements :typing)
+        (:types        place - object)
+        (:predicates (connected ?x ?y - place)
+                 (at ?x - place)
+                 (visited ?x - place)
+        )
+            
+        (:action move
+        :parameters (?curpos ?nextpos - place)
+        :precondition (and (at ?curpos) (connected ?curpos ?nextpos))
+        :effect (and (at ?nextpos) (not (at ?curpos)) (visited ?nextpos))
+        )
+        
+        )`;
+        const problem = `(define (problem grid-12)
+        (:domain grid-visit-all)
+        (:objects 
+        
+        loc1_1 loc1_2 loc2_1 loc2_2 - place 
+        
+                
+        )
+        (:init
+            (at loc1_1)
+            (visited loc1_1)
+            
+        (connected loc1_1 loc2_1)
+        (connected loc2_1 loc1_1)
+        (connected loc1_2 loc1_1)
+        (connected loc1_2 loc2_2)
+        (connected loc2_2 loc1_2)
+        (connected loc1_1 loc1_2)
+        (connected loc2_1 loc2_2)
+        (connected loc2_2 loc2_1)
+         
+        )
+        (:goal
+        (and 
+            (visited loc1_1)
+            (visited loc1_2)
+            (visited loc2_1)
+            (visited loc2_2)
+        )
+        )
+        )`;
         const ap = `(define (animation Visitall)
 
         ; Defines the Animation profile for Visitall
@@ -243,7 +247,7 @@ export class SearchDebuggerView {
         
         ; Specifies that the robot is at a position
         ; We place the robot's x and y coordinates at this point
-          (:predicate at-robot
+          (:predicate at
                        :parameters (?x)
                        :custom robot
                        :effect(
@@ -315,8 +319,67 @@ export class SearchDebuggerView {
         )`;
         const newProblem = problem.replace(re, "$1" + subGoal + "$4");
         
-        console.log(newProblem);
+        var fd = new FormData();
+        fd.append("domain", domain);
+        fd.append("problem", newProblem);
+        fd.append("animation", ap);
+        fd.append("fileType", "spng");
+        // var xhr = new XMLHttpRequest();
+        // xhr.responseType = "arraybuffer";
+        // xhr.open("POST","http://127.0.0.1:8000/upload/(?P<filename>[^/]+)$");
+        // xhr.onreadystatechange = function(){
+        //     if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200){
+        //         var i = document.createElement("img");
+        //         i.setAttribute('src', 'data:image/png;base64,' + btoa(String.fromCharCode.apply(null, new Uint8Array(xhr.response))));
+        //         document.getElementById("planimation").innerHTML = i;
+        //     } else {
+        //         postMessage({command: xhr.status + " " + xhr.readyState});
+        //     }
+        // }
+        // xhr.send(fd);
+        const requestOptions: RequestInit = {
+            method: "POST",
+            body: fd,
+        };
+        
+        fetch("http://127.0.0.1:8000/upload/(?P<filename>[^/]+)$", requestOptions)
+            .then(response => {
+                response.arrayBuffer().then( buffer =>{
+                    var src = 'data:image/png;base64,' + this.arrayBufferToBase64(buffer) ;
+                    new Promise(() => this.postMessage({ command: 'getPNGOfNode', state: src }))
+                        .catch(reason => console.log(reason));
+                    console.log(buffer.byteLength);
+                    console.log({ command: 'getPNGOfNode', state: src });
+                });
+                // console.log(this.arrayBufferToBase64(response.arrayBuffer()));
+                
+                // console.log(src);
+                
+            })
+            .catch(error => console.log('error' + error));
+        // const req = request({
+        //     host: '127.0.0.1',
+        //     port: '8000',
+        //     path: "/upload/(?P<filename>[^/]+)$",
+        //     method: 'POST',
+        //     headers: fd.getHeaders()
+        // },
+        // response =>{
+        //     console.log(response);
+        // }
+        // );
+        // fd.pipe(req);
 
+
+        console.log(newProblem);
+        
+    }
+
+    private arrayBufferToBase64(buffer: any) {
+        let binary = "";
+        const bytes = [].slice.call(new Uint8Array(buffer));
+        bytes.forEach((b:any) => binary += String.fromCharCode(b));
+        return btoa(binary);
     }
 
     displayBetterState(state: State): void {
