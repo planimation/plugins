@@ -88,7 +88,7 @@ const states = {};
 /** @type {number | null} */
 let selectedStateId = null;
 
-const domain = '', problem = '', ap = '';
+// const domain = '', problem = '', ap = '';
 
 document.getElementById("addMock").onclick = () => {
     if (mockStates.length === 0) { return; }
@@ -209,10 +209,15 @@ function onStateSelected(stateId) {
         return; 
     }
 
+    if (domain == null || problem == null || animation == null) {
+        console.log("Please supply domain, problem and animation profile");
+        return;
+    }
+
     selectedStateId = stateId;
     selectChartRow(stateId);
     selectTreeNode(stateId);
-    postMessage({ command: 'stateSelected', stateId: stateId, stateInfo: states[selectedStateId].stateInfo });
+    postMessage({ command: 'stateSelected', stateId: stateId, stateInfo: states[selectedStateId].stateInfo, domain: domain, problem: problem, animation: animation });
 
     if (!vscode) {
         showStatePlan('<div style="width: 400px; height: 900px; background-color: green"></div>');
@@ -442,11 +447,11 @@ function showStateLogButton(logFilePath) {
     }
 }
 
-function setFile(newDomain, newProblem, newAnimation){
+/*function setFile(newDomain, newProblem, newAnimation){
     domain = newDomain;
     problem = newProblem;
     ap = newAnimation;
-}
+}*/
 
 function getPNGOfNode(state) {
 //   var fd = new FormData();
@@ -474,3 +479,31 @@ function getPNGOfNode(state) {
   document.getElementById("planimation").innerHTML = i;
 
 }
+
+var domain, problem, animation;
+document.getElementById('inputfile').addEventListener('change', function() {
+    var fr=new FileReader();
+	fr.onload=function(){
+        domain = fr.result;
+        document.getElementById('output').textContent=domain;
+	}
+	fr.readAsText(this.files[0]);
+})
+
+document.getElementById('inputfile2').addEventListener('change', function() {
+    var fr2=new FileReader();
+	fr2.onload=function(){
+        problem = fr2.result;
+        document.getElementById('output').textContent=problem;
+	}
+    fr2.readAsText(this.files[0]);
+})
+
+document.getElementById('inputfile3').addEventListener('change', function() {
+    var fr3=new FileReader()
+	fr3.onload=function(){
+        animation = fr3.result;
+        document.getElementById('output').textContent=animation;
+    }	
+    fr3.readAsText(this.files[0]);
+})
