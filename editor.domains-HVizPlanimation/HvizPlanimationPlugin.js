@@ -80,7 +80,7 @@ function loadStatespacePlanimation() {
 // initialise the planimation with PDDL files and add the canvas to planimation div.
 function initialisePlanimation(domainPDDL, problemPDDL, animationPDDL) {
   if (document.getElementById("planimation")) {
-    require(["https://cdn.jsdelivr.net/gh/planimation/Frontend-JS@latest/planimationLibrary.js"], function (Planimation) {
+    require(["https://cdn.jsdelivr.net/gh/planimation/Frontend-JS@46a356fde54fe01f654ee61c12c494eac5afc1c6/planimationLibrary.js"], function (Planimation) {
       planimation = new Planimation(domainPDDL, problemPDDL, animationPDDL, 250, 250);
       document.getElementById("planimation").appendChild(planimation.getView())
       // update the height of the search tree svg to 300px
