@@ -275,7 +275,7 @@ define(function () {
 
 });
 
-// call this function every 2 seconds, until the plugin is disabled.
+// call this function every 1 seconds, until the plugin is disabled.
 function disableIfHvizNotLoad() {
   if ("heuristic-viz-with-planimation" in window.plugins && window.plugins["heuristic-viz-with-planimation"].enabled == true) {
     // disable the plugin
