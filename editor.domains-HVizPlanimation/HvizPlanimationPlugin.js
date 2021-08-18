@@ -81,10 +81,10 @@ function loadStatespacePlanimation() {
 function initialiseHvizPlanimation(domainPDDL, problemPDDL, animationPDDL) {
   if (document.getElementById("planimation")) {
     require(["https://cdn.jsdelivr.net/gh/planimation/Frontend-JS@46a356fde54fe01f654ee61c12c494eac5afc1c6/planimationLibrary.js"], function (Planimation) {
-      hvizPlanimation = new Planimation(domainPDDL, problemPDDL, animationPDDL, 250, 250);
+      hvizPlanimation = new Planimation(domainPDDL, problemPDDL, animationPDDL, 350, 350);
       document.getElementById("planimation").appendChild(hvizPlanimation.getView())
-      // update the height of the search tree svg to 300px
-      document.getElementById("statespace").getElementsByTagName("svg")[0].style.height = "300px";
+      // update the height of the search tree svg to 300px | not relevant now
+      // document.getElementById("statespace").getElementsByTagName("svg")[0].style.height = "300px";
     });
   } else {
     window.setTimeout(() => initialiseHvizPlanimation(domainPDDL, problemPDDL, animationPDDL), 5000);
@@ -97,17 +97,17 @@ function launchHvizPlanimation() {
     $('#' + editor_name).html('<div style = "margin:13px 26px;text-align:center"><h3>Heuristic Search Vizualization</h3>' +
 
       '<div class="row">' +
-      '  <div class="col-md-9">' +
+      '  <div class="col-md-8">' +
       '     <div id="statespace"></div>' +
-      '     <div id="planimation"></div>' +
       '  </div>' +
-      '  <div id="statepanel" class="col-md-3">' +
+      '  <div id="statepanel" class="col-md-4">' +
       '    <div id="statebuttons" style="padding:10px">' +
       '      <button onclick="show_hadd()" type="button" class="btn btn-info">hadd</button>' +
-      '      <button onclick="compute_plan()" type="button" class="btn btn-success">Plan</button><br /><br />' +
-      '      <button onclick="compute_all_heur()" type="button" class="btn btn-primary">Compute All Heuristics</button>' +
+      '      <button onclick="compute_plan()" type="button" class="btn btn-success">Plan</button>' +
+      '      <button style="margin-left:30px" onclick="compute_all_heur()" type="button" class="btn btn-primary">Compute All Heuristics</button>' +
       '    </div>' +
       '    <div id="statename" style="clear:both">State</div>' +
+      '    <div id="planimation"></div>' +
       '    <div id="statedetails" style="padding:10px"></div>' +
       '  </div>' +
       '</div>' +
