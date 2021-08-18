@@ -48,7 +48,7 @@ var HVIZ_PLANIMATION_MODEL = `
 `
 
 // To store the planimation object,and currently only support one planimation object
-var planimation;
+var hvizPlanimation;
 
 // Called when you click 'Planimate' on the file chooser
 function loadStatespacePlanimation() {
@@ -69,30 +69,30 @@ function loadStatespacePlanimation() {
   ground(domain, problem).then(function (result) {
     treeData = { "name": "root", "children": [], "state": result.state, "strState": result.strState, "precondition": null, "loadedChildren": false };
     stateCounter = 1;
-    
-    launchVizPlanimation();
+
+    launchHvizPlanimation();
   });
 
   // initialise the planimation
-  initialisePlanimation(domain, problem, animation);
+  initialiseHvizPlanimation(domain, problem, animation);
 }
 
 // initialise the planimation with PDDL files and add the canvas to planimation div.
-function initialisePlanimation(domainPDDL, problemPDDL, animationPDDL) {
+function initialiseHvizPlanimation(domainPDDL, problemPDDL, animationPDDL) {
   if (document.getElementById("planimation")) {
     require(["https://cdn.jsdelivr.net/gh/planimation/Frontend-JS@46a356fde54fe01f654ee61c12c494eac5afc1c6/planimationLibrary.js"], function (Planimation) {
-      planimation = new Planimation(domainPDDL, problemPDDL, animationPDDL, 250, 250);
-      document.getElementById("planimation").appendChild(planimation.getView())
+      hvizPlanimation = new Planimation(domainPDDL, problemPDDL, animationPDDL, 250, 250);
+      document.getElementById("planimation").appendChild(hvizPlanimation.getView())
       // update the height of the search tree svg to 300px
       document.getElementById("statespace").getElementsByTagName("svg")[0].style.height = "300px";
     });
   } else {
-    window.setTimeout(()=>initialisePlanimation(domainPDDL, problemPDDL, animationPDDL), 5000);
+    window.setTimeout(() => initialiseHvizPlanimation(domainPDDL, problemPDDL, animationPDDL), 5000);
   }
 }
 
 //The following is copied from Hviz plugin and addtional planimation div is added.
-function launchVizPlanimation() {
+function launchHvizPlanimation() {
   window.new_tab('Statespace + Planimation', function (editor_name) {
     $('#' + editor_name).html('<div style = "margin:13px 26px;text-align:center"><h3>Heuristic Search Vizualization</h3>' +
 
@@ -122,7 +122,7 @@ function launchVizPlanimation() {
 
 
 // Single click on node: update the info shown for a node
-function click(d) {
+function clickHvizPlanimation(d) {
   nodeSelected(d);
 
   // get the plan
@@ -130,8 +130,8 @@ function click(d) {
 
   // this variable is used to seperate root node and other node
   var nodeName = d.data.name;
-  if (typeof planimation !== 'undefined') {
-    planimation.updateWithPlan(plan, nodeName == "root");
+  if (typeof hvizPlanimation !== 'undefined') {
+    hvizPlanimation.updateWithPlan(plan, nodeName == "root");
   }
 }
 
@@ -146,9 +146,8 @@ function getNodeActions(d) {
 }
 
 // Special file chooser for this plugin
-function chooseVizPlanimationFiles(type) {
+function chooseHvizPlanimationFiles(type) {
 
-  console.log(type)
   window.action_type = type
   window.file_choosers[type].showChoice();
 
@@ -210,21 +209,23 @@ function chooseVizPlanimationFiles(type) {
 
 // If heuristic-viz is loaded, then add heuristic-viz with Planimation plugin
 // If the heuristic-viz is not loaded, plugin will load failed.
-if ("heuristic-viz" in window.plugins) {
 
-  define(function () {
-    window.planimationSolverStyled = false;
 
-    return {
-      name: "Heuristic Viz with Planimation",
-      author: "Cam Cunningham, Caitlin Aspinall, Ellie Sekine, Christian Muise, Nir Lipovetzky (plugin)",
-      email: "16cea5@queensu.com",
-      description: "Heuristic Vizualization with Planimation",
-      initialize: function () {
+define(function () {
+  window.hvizPlanimationSolverStyled = false;
 
+  return {
+    name: "Heuristic Viz with Planimation",
+    author: "Cam Cunningham, Caitlin Aspinall, Ellie Sekine, Christian Muise, Nir Lipovetzky (plugin)",
+    email: "16cea5@queensu.com",
+    description: "Heuristic Vizualization with Planimation",
+    initialize: function () {
+
+      if ("heuristic-viz" in window.plugins) {
         // Adds menu button that allows for choosing files
         window.remove_menu_button("heurVizMenuItem");
-        window.add_menu_button('HvizPlanimation', 'vizPlanimationMenuItem', 'glyphicon-tower', "chooseVizPlanimationFiles('HvizPlanimation')");
+
+        window.add_menu_button('HvizPlanimation', 'hvizPlanimationMenuItem', 'glyphicon-tower', "chooseHvizPlanimationFiles('HvizPlanimation')");
         window.inject_styles('.viz_display {padding: 20px 0px 0px 40px;}')
 
         // Register this as a user of the file chooser interface
@@ -233,104 +234,55 @@ if ("heuristic-viz" in window.plugins) {
             showChoice: function () {
               // Button name, Description
               window.setup_file_chooser('Go', 'Display Visualization');
-            
+
             },
             // Called when go is hit
             selectChoice: loadStatespacePlanimation
           });
 
+        // replace the original click function in Hviz plugin
+        click = clickHvizPlanimation;
 
-        if (!(window.planimationSolverStyled)) {
-          $('body').append(HVIZ_PLANIMATION_MODEL);
-          window.planimationSolverStyled = true;
-        }
-      },
+      } else {
+        console.log("initialize once!!!!")
+        window.toastr.warning("Please enable the Heuris first, then enable this plugin")
+        disableIfHvizNotLoad()
 
-      disable: function () {
-        // This is called whenever the plugin is disabled
-        window.toastr.warning("Plug in disabled")
-        window.remove_menu_button("vizPlanimationMenuItem");
-      },
-
-      save: function () {
-        // Used to save the plugin settings for later
-        window.toastr.warning("Plug in saved")
-      },
-
-      load: function (settings) {
-        // Restore the plugin settings from a previous save call
-        window.toastr.warning("Plug in loaded")
       }
-    };
 
-  });
-} else {
-  add_featured_plugin('heuristic-viz');
-  checkHeuristicVizLoaded();
-}
+      if (!(window.hvizPlanimationSolverStyled)) {
+        $('body').append(HVIZ_PLANIMATION_MODEL);
+        window.hvizPlanimationSolverStyled = true;
+      }
+    },
 
+    disable: function () {
+      // This is called whenever the plugin is disabled
+      window.toastr.warning("Plug in disabled")
+      window.remove_menu_button("hvizPlanimationMenuItem");
+    },
 
-// the following function is not working currently.
-// wait until HeuristicViz is Loaded, then install HeuristicViz with Planimation. 
-function checkHeuristicVizLoaded() {
-  if (window.grounderLoaded) {
+    save: function () {
+      // Used to save the plugin settings for later
+      window.toastr.warning("Plug in saved")
+    },
 
-    define(function () {
-      window.planimationSolverStyled = false;
+    load: function (settings) {
+      // Restore the plugin settings from a previous save call
+      window.toastr.warning("Plug in loaded")
+    }
+  };
 
-      return {
-        name: "Heuristic Viz with Planimation",
-        author: "Cam Cunningham, Caitlin Aspinall, Ellie Sekine, Christian Muise, Nir Lipovetzky (plugin)",
-        email: "16cea5@queensu.com",
-        description: "Heuristic Vizualization with Planimation",
-        initialize: function () {
+});
 
-          // Adds menu button that allows for choosing files
-          window.remove_menu_button("heurVizMenuItem");
-          window.add_menu_button('HvizPlanimation', 'vizPlanimationMenuItem', 'glyphicon-tower', "chooseVizPlanimationFiles('HvizPlanimation')");
-          window.inject_styles('.viz_display {padding: 20px 0px 0px 40px;}')
-
-          // Register this as a user of the file chooser interface
-          window.register_file_chooser('HvizPlanimation',
-            {
-              showChoice: function () {
-                // Button name, Description
-                window.setup_file_chooser('Go', 'Display Visualization');
-           
-
-              },
-              // Called when go is hit
-              selectChoice: loadStatespacePlanimation
-            });
-
-
-          if (!(window.planimationSolverStyled)) {
-            $('body').append(HVIZ_PLANIMATION_MODEL);
-            window.planimationSolverStyled = true;
-          }
-        },
-
-        disable: function () {
-          // This is called whenever the plugin is disabled
-          window.toastr.warning("Plug in disabled")
-          window.remove_menu_button("vizPlanimationMenuItem");
-        },
-
-        save: function () {
-          // Used to save the plugin settings for later
-          window.toastr.warning("Plug in saved")
-        },
-
-        load: function (settings) {
-          // Restore the plugin settings from a previous save call
-          window.toastr.warning("Plug in loaded")
-        }
-      };
-
-    });
-
+// call this function every 2 seconds, until the plugin is disabled.
+function disableIfHvizNotLoad() {
+  if ("heuristic-viz-with-planimation" in window.plugins && window.plugins["heuristic-viz-with-planimation"].enabled == true) {
+    // disable the plugin
+    $("#plugin_entry__heuristic-viz-with-planimation input").click()
+    window.plugins["heuristic-viz-with-planimation"].enabled = false;
   } else {
-    window.setTimeout(checkHeuristicVizLoaded, 2000); /* this checks the flag every 2000 milliseconds*/
-
+    window.setTimeout(disableIfHvizNotLoad, 1000);
   }
+
 }
