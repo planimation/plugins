@@ -216,8 +216,8 @@ define(function () {
 
   return {
     name: "Heuristic Viz with Planimation",
-    author: "Cam Cunningham, Caitlin Aspinall, Ellie Sekine, Christian Muise, Nir Lipovetzky (plugin)",
-    email: "16cea5@queensu.com",
+    author: "Nir Lipovetzky, Yi Ding",
+    email: "nir.lipovetzky@unimelb.edu.au",
     description: "Heuristic Vizualization with Planimation",
     initialize: function () {
 
